@@ -5,6 +5,9 @@
   <PropertyGroup>
     <OriathHubLibRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</OriathHubLibRoot>
 
+    <!-- Prevent SDK-style projects from auto-including OriathHubLib source files. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(OriathHubLibRoot)**/*.cs</DefaultItemExcludes>
+
     <OriathHubLibSdkPackageId Condition="'$(OriathHubLibSdkPackageId)' == ''">OriathHub.Sdk</OriathHubLibSdkPackageId>
     <OriathHubLibSdkVersion Condition="'$(OriathHubLibSdkVersion)' == '' and '$(OriathHubSdkVersion)' != ''">$(OriathHubSdkVersion)</OriathHubLibSdkVersion>
     <OriathHubLibSdkVersion Condition="'$(OriathHubLibSdkVersion)' == ''">0.13.0</OriathHubLibSdkVersion>
