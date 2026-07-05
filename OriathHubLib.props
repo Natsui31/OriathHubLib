@@ -17,7 +17,10 @@
     <OriathHubLibUseEmbeddedNuGetConfig Condition="'$(OriathHubLibUseEmbeddedNuGetConfig)' == ''">true</OriathHubLibUseEmbeddedNuGetConfig>
     <OriathHubLibDefineSdkPackageVersion Condition="'$(OriathHubLibDefineSdkPackageVersion)' == ''">true</OriathHubLibDefineSdkPackageVersion>
 
-    <!-- Force restore to use the NuGet configuration shipped by this shared repository. -->
+    <!-- Make the embedded SDK package visible to NuGet restore. -->
+    <RestoreAdditionalProjectSources Condition="'$(OriathHubLibUseEmbeddedNuGetConfig)' == 'true'">$(RestoreAdditionalProjectSources);$(OriathHubLibRoot)nuget</RestoreAdditionalProjectSources>
+
+    <!-- Optional embedded config for explicit restore scenarios. -->
     <RestoreConfigFile Condition="'$(OriathHubLibUseEmbeddedNuGetConfig)' == 'true'">$(OriathHubLibRoot)nuget.config</RestoreConfigFile>
   </PropertyGroup>
 
