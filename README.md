@@ -1,24 +1,35 @@
 # OriathHubLib
 
 `OriathHubLib` is a C# Shared Project intended to be imported by OriathHub plugins.
-It provides source-level extensions and helpers on top of `OriathHub.Sdk` without producing a separate runtime assembly.
+Its purpose is to extend and simplify usage of the API exposed by the external `OriathHub.Sdk`, without replacing the SDK and without producing a separate runtime assembly.
 
-The project is designed for developers and LLM/code-generation agents that need a small, explicit integration surface:
+The OriathHub SDK is not authored or maintained in this repository.
+The upstream SDK can be found here:
 
-- one shared source import: `src/OriathHubLib/OriathHubLib.projitems`;
-- one MSBuild entry point for plugin projects: `OriathHubLib.props`;
-- one SDK version source of truth: `OriathHubSdk.props`;
-- one embedded offline NuGet feed: `nuget/`;
-- one embedded NuGet configuration: `nuget.config`.
+https://github.com/danthespal/OriathHubSDK
+
+## Purpose
+
+`OriathHubLib` provides additional source-level helpers, wrappers, and extension code for plugin projects that already depend on `OriathHub.Sdk`.
+
+In practical terms, this repository acts as a companion layer around the SDK:
+
+- the SDK provides the official OriathHub plugin API;
+- this repository adds shared C# source files that make that API easier to consume;
+- plugin projects import this repository as source, so the code is compiled directly into the plugin assembly;
+- no `OriathHubLib.dll` is produced or deployed at runtime.
 
 ## Relationship with OriathHub.Sdk
 
 `OriathHub.Sdk` is the compile-time SDK used to build OriathHub plugins.
-It exposes reference assemblies for the host API, including `Core`, `RemoteObjects`, `Components`, `States`, `RemoteEnums`, `Utils`, and `PluginBase`, and also exposes public native container layouts from `GameOffsets.Natives.*`, such as `StdVector`, `StdMap`, and `StdWString`.
-At runtime, the OriathHub host already loads the SDK assemblies, so plugins should normally ship only their plugin DLL, assets, and additional non-SDK dependencies.
+It exposes the host API reference assemblies, including `Core`, `RemoteObjects`, `Components`, `States`, `RemoteEnums`, `Utils`, and `PluginBase`.
+It also exposes public native container layouts from `GameOffsets.Natives.*`, such as `StdVector`, `StdMap`, and `StdWString`.
 
-`OriathHubLib` does not replace the SDK.
-It extends SDK usage by injecting additional C# source files into the plugin assembly that imports it.
+`OriathHubLib` depends on that SDK API and extends how it is used from plugin code.
+It does not own, modify, replace, or redistribute the SDK project itself.
+
+At runtime, the OriathHub host already loads the SDK assemblies.
+Plugins should normally ship only their plugin DLL, assets, and additional non-SDK dependencies.
 
 ## Repository layout
 
@@ -34,6 +45,15 @@ OriathHubLib/
     RemoteObjects/            # Shared source files
 ```
 
+## Integration surface
+
+The repository is intentionally small and explicit. A plugin project should only need:
+
+- `OriathHubLib.props` as the MSBuild import entry point;
+- `src/OriathHubLib/OriathHubLib.projitems` as the shared source list, imported indirectly by the props file;
+- `OriathHubSdk.props` as the SDK version source of truth;
+- `nuget.config` and `nuget/` for SDK package restore.
+
 ## Versioning model
 
 The SDK version is defined in `OriathHubSdk.props`:
@@ -48,14 +68,14 @@ The SDK version is defined in `OriathHubSdk.props`:
 
 `OriathHubLib.props` imports `OriathHubSdk.props` and uses `$(OriathHubSdkVersion)` as the default version for the `OriathHub.Sdk` package reference.
 
-When updating the SDK:
+When updating the SDK compatibility target:
 
 1. add the new `OriathHub.Sdk.<version>.nupkg` file to `nuget/`;
 2. update `OriathHubSdk.props`;
-3. update shared source code if required by SDK API changes;
-4. commit the whole change as one compatibility unit.
+3. update the shared source code if required by SDK API changes;
+4. commit the SDK package, version file, and shared source changes together.
 
-This keeps the following coupling explicit:
+This keeps the compatibility relationship explicit:
 
 ```text
 OriathHubLib commit X
@@ -139,14 +159,14 @@ A plugin should be deployed as expected by the OriathHub host:
 Ship additional non-SDK dependencies only when the plugin directly requires them at runtime.
 Do not ship `OriathHub.Sdk` assemblies unless the host loading model changes.
 
-## Development notes for LLM agents
+## Development notes
 
 When modifying this repository:
 
 - treat `OriathHubSdk.props` as the SDK version source of truth;
 - keep `OriathHubLib.props` as the only file a plugin project needs to import;
+- keep this repository focused on SDK API extensions and shared plugin helpers;
 - do not add plugin-specific code or settings to this shared project;
 - avoid introducing runtime assets unless they are explicitly required by shared source code;
 - keep all shared source paths listed in `OriathHubLib.projitems`;
 - keep `OriathHubLib.shproj` colocated with `OriathHubLib.projitems` so Visual Studio displays files under the expected tree;
-- do not commit `.vs/`, `bin/`, or `obj/` directories.
