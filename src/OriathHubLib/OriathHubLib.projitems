@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>8ba38076-9095-4c95-b373-10a855458a75</SharedGUID>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>OriathHub</Import_RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\DatRow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\DatTableAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\FileStructureStore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\DatRowTypeDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\DatTableRange.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\DatTableRangeReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\ForeignRowAddress.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\ForeignRowArrayReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\RemoteDatTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\RemoteDatTableBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\FilesStructures\Runtime\RuntimeDatTableResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteObjects\RemoteObjectExtensions.cs" />
+  </ItemGroup>
+</Project>

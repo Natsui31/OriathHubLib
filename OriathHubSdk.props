@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <OriathHubSdkVersion>0.13.0</OriathHubSdkVersion>
+  </PropertyGroup>
+</Project>

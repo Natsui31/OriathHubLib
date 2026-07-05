@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="nuget.config" />
+    <File Path="OriathHubLib.props" />
+    <File Path="OriathHubSdk.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/OriathHubLib/OriathHubLib.shproj" />
+</Solution>

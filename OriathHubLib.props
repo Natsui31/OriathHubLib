@@ -1,0 +1,36 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)OriathHubSdk.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)OriathHubSdk.props')" />
+
+  <PropertyGroup>
+    <OriathHubLibRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)'))</OriathHubLibRoot>
+
+    <OriathHubLibSdkPackageId Condition="'$(OriathHubLibSdkPackageId)' == ''">OriathHub.Sdk</OriathHubLibSdkPackageId>
+    <OriathHubLibSdkVersion Condition="'$(OriathHubLibSdkVersion)' == '' and '$(OriathHubSdkVersion)' != ''">$(OriathHubSdkVersion)</OriathHubLibSdkVersion>
+    <OriathHubLibSdkVersion Condition="'$(OriathHubLibSdkVersion)' == ''">0.13.0</OriathHubLibSdkVersion>
+
+    <OriathHubLibReferenceSdk Condition="'$(OriathHubLibReferenceSdk)' == ''">true</OriathHubLibReferenceSdk>
+    <OriathHubLibImportSharedItems Condition="'$(OriathHubLibImportSharedItems)' == ''">true</OriathHubLibImportSharedItems>
+    <OriathHubLibUseEmbeddedNuGetConfig Condition="'$(OriathHubLibUseEmbeddedNuGetConfig)' == ''">true</OriathHubLibUseEmbeddedNuGetConfig>
+    <OriathHubLibDefineSdkPackageVersion Condition="'$(OriathHubLibDefineSdkPackageVersion)' == ''">true</OriathHubLibDefineSdkPackageVersion>
+
+    <!-- Force restore to use the NuGet configuration shipped by this shared repository. -->
+    <RestoreConfigFile Condition="'$(OriathHubLibUseEmbeddedNuGetConfig)' == 'true'">$(OriathHubLibRoot)nuget.config</RestoreConfigFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(OriathHubLibReferenceSdk)' == 'true' and '$(ManagePackageVersionsCentrally)' == 'true' and '$(OriathHubLibDefineSdkPackageVersion)' == 'true'">
+    <PackageVersion Include="$(OriathHubLibSdkPackageId)" Version="$(OriathHubLibSdkVersion)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OriathHubLibReferenceSdk)' == 'true' and '$(ManagePackageVersionsCentrally)' == 'true'">
+    <PackageReference Include="$(OriathHubLibSdkPackageId)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OriathHubLibReferenceSdk)' == 'true' and '$(ManagePackageVersionsCentrally)' != 'true'">
+    <PackageReference Include="$(OriathHubLibSdkPackageId)" Version="$(OriathHubLibSdkVersion)" />
+  </ItemGroup>
+
+  <Import Project="$(OriathHubLibRoot)src\OriathHubLib\OriathHubLib.projitems"
+          Label="Shared"
+          Condition="'$(OriathHubLibImportSharedItems)' == 'true' and Exists('$(OriathHubLibRoot)src\OriathHubLib\OriathHubLib.projitems')" />
+</Project>
